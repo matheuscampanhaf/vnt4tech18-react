@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 import Card from '../JobCard/JobCard';
 import Loading from '../../navigation/Loading/Loading';
 
-import vagas from '../../../assets/vagas';
 import axios from 'axios';
+
+import Form from '../JobForm/JobForm';
+import Collapse from '../../../hoc/Collapse/Collapse';
 
 class JobList extends Component {
 
@@ -11,6 +13,12 @@ class JobList extends Component {
     jobs: [],
     selectedId: null,
     hasError: false
+  }
+
+  addItemToList = (newItem) => {
+    let currentJobs = this.state.jobs;
+    currentJobs.push(newItem);
+    this.setState({ jobs: currentJobs });
   }
 
   componentDidMount() {
@@ -25,7 +33,18 @@ class JobList extends Component {
 
   jobRemoveHandler = (id, nome) => {
     if (window.confirm(`Deseja realmente excluir essa vaga "${nome}"?`)) {
-      window.alert('Excluído com sucesso!');
+      axios.delete(`/jobs/${id}`)
+           .then(res => {
+             let vagasAtualizadas = this.state.jobs;
+             const indiceRemovido = 
+              vagasAtualizadas.findIndex(item => item.id == id);
+              
+             vagasAtualizadas.splice(indiceRemovido, 1);
+             this.setState({ jobs: vagasAtualizadas })
+           })
+           .catch(error => {
+             console.error(error);
+           })
     }
   }
 
@@ -67,8 +86,15 @@ class JobList extends Component {
     //   this.getJobCards() : <Loading/>
 
     return (
-      <div className="row">        
-        {htmlGerado}
+      <div>
+        <Collapse collapseId="formCollapse" innerText="CRIAR VAGA"
+              classCollapse="btn-secondary">
+          <Form addToList={this.addItemToList}/>
+        </Collapse>
+
+        <div className="row">        
+          {htmlGerado}
+        </div>
       </div>
     );
   }
