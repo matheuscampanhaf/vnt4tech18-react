@@ -32,8 +32,14 @@ class JobList extends Component {
   }
 
   jobRemoveHandler = (id, nome) => {
+    const axiosConfig = {
+      headers: {
+        'Authorization': 'Bearer ' + window.localStorage.getItem('token')
+      }
+    }
+
     if (window.confirm(`Deseja realmente excluir essa vaga "${nome}"?`)) {
-      axios.delete(`/jobs/${id}`)
+      axios.delete(`/jobs/${id}`, axiosConfig)
            .then(res => {
              let vagasAtualizadas = this.state.jobs;
              const indiceRemovido = 
@@ -43,6 +49,9 @@ class JobList extends Component {
              this.setState({ jobs: vagasAtualizadas })
            })
            .catch(error => {
+             if (error.response.status == 401) {
+               alert('Não autorizado');
+             }
              console.error(error);
            })
     }

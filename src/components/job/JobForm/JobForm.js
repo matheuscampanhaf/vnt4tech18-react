@@ -12,7 +12,13 @@ class JobForm extends Component {
       ...this.state.newJob
     };
 
-    axios.post('/jobs', novaVaga)
+    const axiosConfig = {
+      headers: {
+        'Authorization': 'Bearer ' + window.localStorage.getItem('token')
+      }
+    }
+
+    axios.post('/jobs', novaVaga, axiosConfig)
       .then((response) => {
         novaVaga.id = response.data;
         this.props.addToList(novaVaga);

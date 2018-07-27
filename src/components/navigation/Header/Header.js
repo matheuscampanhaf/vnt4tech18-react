@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import logo from '../../../assets/images/logo-h-vjobs.png';
 
-const header = () => (
+const header = (props) => (
     <nav className="navbar navbar-expand-lg navbar-light  bg-dark">
       <a className="navbar-brand" href="#">
         <img src={logo} style={{ width: '100px' }} />
@@ -20,6 +20,13 @@ const header = () => (
             to='/sobre'>Sobre</Link>
         </div>
       </div>
+
+      <a className="nav-item nav-link text-white">
+        {props.userName}
+      </a>
+      <a className="nav-item nav-link text-white" onClick={() => props.logout()}>
+        <i className="fas fa-sign-out-alt"></i>
+      </a>
     </nav>
 );
 
