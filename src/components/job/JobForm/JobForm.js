@@ -33,7 +33,12 @@ class JobForm extends Component {
   changeValueHandler = (nomeAtributo, valor) => {
     let currentJob = this.state.newJob;
 
-    currentJob[nomeAtributo] = valor;
+    // isso serve para transformar o texto em array. Ele vai separar por cada linha digitada no textarea
+    if (nomeAtributo == 'skills' || nomeAtributo == 'differentials') {
+      currentJob[nomeAtributo] = valor.split(/\n\r?/g);
+    } else {
+      currentJob[nomeAtributo] = valor;
+    }
 
     this.setState({ newJob: currentJob });
   }
